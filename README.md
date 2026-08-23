@@ -1,9 +1,29 @@
 # Sakro
-Sakro watches network traffic on your computer or lab. It shows the packets it saw and marks ones that look unusual.
 
-It is a learning and monitoring project — not a commercial product, and not a full security company tool.
+Sakro is a small website that shows network packets from a file named `traffic.csv`. It marks packets that look unusual. It is a learning project, not a full security product.
 
-This HTML file is a preview you can open in a browser. For live packets from your machine, run the Python app and open the address it prints (usually http://127.0.0.1:5000).
+## Put it on Render
 
-It does not replace a firewall or antivirus. Unusual packets are hints, not proof that someone broke in.
-link: https://hamedah101.github.io/Sakro
+Render looks for a Python file named **app.py**. That file must be in this GitHub repo (the same one Render is connected to).
+
+In Render, use these settings:
+
+- **Build command:** `pip install -r requirements.txt`
+- **Start command:** `gunicorn app:app`
+
+After GitHub has the new files, open your Render service and click **Manual Deploy**.
+
+Free Render websites go to sleep when nobody visits. The first load after that can take about a minute.
+
+You do not need to put Backblaze keys in GitHub. If you use Backblaze later, add the keys in Render as environment variables, or keep them in a local `.env` file on your computer.
+
+## Run it on your computer
+
+```
+pip install -r requirements.txt
+python app.py
+```
+
+Then open http://127.0.0.1:5000 in your browser.
+
+Packet capture (`packet_capture.py`) only works on your own computer. It will not capture your home network from Render.

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% set page_title = "Analytics" %}
+{% set page_subtitle = "Simple counts and charts" %}
+
+{% block extra_head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/json" id="chartFacts">{{ {"protocols": protocol_counts, "total": total_packets, "threats": threats} | tojson }}</script>
+{% endblock %}
+
+{% block content %}
+    <section class="stat-grid">
+        <article class="panel stat-card">
+            <span class="stat-label">Packets</span>
+            <strong class="stat-value blue">{{ total_packets }}</strong>
+        </article>
+        <article class="panel stat-card">
+            <span class="stat-label">Unusual packets</span>
+            <strong class="stat-value {% if threats %}red{% else %}green{% endif %}">{{ threats }}</strong>
+        </article>
+        <article class="panel stat-card">
+            <span class="stat-label">Addresses seen</span>
+            <strong class="stat-value">{{ device_count }}</strong>
+        </article>
+        <article class="panel stat-card">
+            <span class="stat-label">Risk level</span>
+            <strong class="stat-value {% if risk == 'High' %}red{% elif risk == 'Medium' %}yellow{% else %}green{% endif %}">{{ risk }}</strong>
+        </article>
+    </section>
+
+    <section class="two-col">
+        <article class="panel">
+            <div class="panel-header">
+                <h3>Packets by type</h3>
+            </div>
+            <div class="chart-wrap">
+                <canvas id="protocolChart"></canvas>
+            </div>
+        </article>
+        <article class="panel">
+            <div class="panel-header">
+                <h3>Normal vs unusual</h3>
+            </div>
+            <div class="chart-wrap">
+                <canvas id="riskChart"></canvas>
+            </div>
+        </article>
+    </section>
+{% endblock %}

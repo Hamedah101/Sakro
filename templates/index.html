@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% set page_title = "Dashboard" %}
+{% set page_subtitle = "Live view of traffic on your network" %}
+
+{% block content %}
+    {% if show_alerts and threats %}
+    <section class="alert" id="threatAlert">
+        <span>{{ threats }} packet{% if threats != 1 %}s{% endif %} looked unusual. Open Threats to read what that means.</span>
+        <button id="dismissAlert" type="button" aria-label="Dismiss alert">×</button>
+    </section>
+    {% endif %}
+
+    <section class="stat-grid">
+        <article class="panel stat-card">
+            <span class="stat-label">Packets seen</span>
+            <strong class="stat-value blue">{{ total_packets }}</strong>
+        </article>
+        <article class="panel stat-card">
+            <span class="stat-label">Threats</span>
+            <strong class="stat-value {% if threats %}red{% else %}green{% endif %}">{{ threats }}</strong>
+        </article>
+        <article class="panel stat-card">
+            <span class="stat-label">Monitor status</span>
+            <strong class="stat-value green">On</strong>
+        </article>
+        <article class="panel stat-card">
+            <span class="stat-label">Risk level</span>
+            <strong class="stat-value {% if risk == 'High' %}red{% elif risk == 'Medium' %}yellow{% else %}green{% endif %}">{{ risk }}</strong>
+        </article>
+    </section>
+
+    <section class="dashboard-grid">
+        <article class="panel">
+            <div class="panel-header">
+                <h3>Recent activity</h3>
+                <span class="badge">From file</span>
+            </div>
+            <div class="activity-list">
+                {% for item in activity %}
+                <div class="activity">
+                    <span class="dot {% if item.kind %}danger{% endif %}"></span>
+                    <span>{{ item.text }}</span>
+                    <time>{{ item.time }}</time>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+
+        <article class="panel">
+            <div class="panel-header">
+                <h3>Network layout</h3>
+                <span class="badge">sketch</span>
+            </div>
+            <div class="topology">
+                <span class="network-line" style="top: 105px; left: 29%; width: 27%; transform: rotate(23deg);"></span>
+                <span class="network-line" style="top: 132px; left: 52%; width: 27%; transform: rotate(-20deg);"></span>
+                <span class="network-line" style="top: 176px; left: 29%; width: 27%; transform: rotate(-24deg);"></span>
+                <span class="network-line" style="top: 171px; left: 52%; width: 27%; transform: rotate(22deg);"></span>
+                <div class="node a">PC<span>this network</span></div>
+                <div class="node b">Server<span>this network</span></div>
+                <div class="node c">Phone<span>this network</span></div>
+                <div class="node d">IoT<span>check this</span></div>
+                <div class="node router">Router<span>gateway</span></div>
+            </div>
+        </article>
+    </section>
+
+    <section class="panel table-panel">
+        <div class="panel-header">
+            <h3>Recent packets</h3>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Protocol</th>
+                        <th>Risk</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for packet in packets[-12:] %}
+                    <tr>
+                        <td>{{ packet.source }}</td>
+                        <td>{{ packet.destination }}</td>
+                        <td class="protocol">{{ packet.protocol }}</td>
+                        <td><span class="severity {{ packet.risk_class }}">{{ packet.risk }}</span></td>
+                        <td>{{ packet.note }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="empty">No packets in traffic.csv yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

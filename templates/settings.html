@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% set page_title = "Settings" %}
+{% set page_subtitle = "Monitor options and cloud backup" %}
+
+{% block content %}
+    <section class="notice">
+        <h3>You already have the Backblaze code</h3>
+        <p>This page is how you try it. You do not need to write the upload from scratch.</p>
+        <ol class="help-list">
+            <li>Make a free Backblaze B2 account and create a bucket (a named folder in the cloud).</li>
+            <li>Create an Application Key. Copy the <strong>Key ID</strong> and the <strong>Application Key</strong> (the key is shown only once).</li>
+            <li>Paste those values below, plus your bucket name. Leave the storage address as-is unless Backblaze showed a different region.</li>
+            <li>Click <strong>Save settings</strong>. Keys stay in a local <code>.env</code> file on this computer — never in git.</li>
+            <li>Click <strong>Save a copy of traffic to Backblaze</strong>. A green or red message at the top of this page tells you if it worked.</li>
+        </ol>
+        <p>The upload steps live in <code>backblaze.py</code>. The Save and Upload buttons are wired in <code>app.py</code>.</p>
+    </section>
+
+    <section class="panel" style="margin-bottom: 14px;">
+        <div class="panel-header">
+            <h3>Monitor options</h3>
+        </div>
+        <form class="form-stack" method="post" action="{{ url_for('save_settings') }}">
+            <label class="check-row">
+                <input type="checkbox" name="show_alerts" {% if show_alerts %}checked{% endif %}>
+                <span>Show the unusual-packet banner on the dashboard</span>
+            </label>
+            <p class="help">These choices stay on this computer. They do not change how packets are captured.</p>
+
+            <div class="field">
+                <label for="b2_key_id">Backblaze Key ID</label>
+                <input id="b2_key_id" name="b2_key_id" type="text" value="{{ b2_key_id }}" autocomplete="off" placeholder="Like a username — paste from Backblaze">
+            </div>
+            <div class="field">
+                <label for="b2_application_key">Backblaze Application Key</label>
+                <input id="b2_application_key" name="b2_application_key" type="password" autocomplete="new-password" placeholder="{% if key_saved %}Key already saved — type a new one to replace it{% else %}Like a password — we never show this again{% endif %}">
+            </div>
+            <div class="field">
+                <label for="b2_bucket">Bucket name</label>
+                <input id="b2_bucket" name="b2_bucket" type="text" value="{{ b2_bucket }}" autocomplete="off" placeholder="The named folder in your Backblaze account">
+            </div>
+            <div class="field">
+                <label for="b2_endpoint">Storage address (endpoint)</label>
+                <input id="b2_endpoint" name="b2_endpoint" type="text" value="{{ b2_endpoint }}" autocomplete="off">
+                <p class="help">Default is https://s3.us-west-004.backblazeb2.com. Change the region if Backblaze shows a different one (example: eu-central-003).</p>
+            </div>
+            <button class="primary-button" type="submit">Save settings</button>
+            <p class="help">Save writes these values to a local <code>.env</code> file. We never put real keys in the code.</p>
+        </form>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <h3>Save a copy</h3>
+        </div>
+        <form class="form-stack" method="post" action="{{ url_for('upload_b2') }}">
+            <p class="help">This reads <code>traffic.csv</code>, logs in to Backblaze, sends a copy, then shows success or fail. The original file stays here.</p>
+            <button class="primary-button" type="submit">Save a copy of traffic to Backblaze</button>
+        </form>
+    </section>
+{% endblock %}

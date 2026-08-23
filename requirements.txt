@@ -1,4 +1,6 @@
 flask
 gunicorn
-joblib
+pandas
+boto3
+python-dotenv
 scikit-learn
