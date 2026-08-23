@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} — Sakro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='sakro.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <h1>Sakro</h1>
+                <p>Network monitor</p>
+            </div>
+
+            <nav>
+                <ul class="nav-list">
+                    <li><a class="nav-item {% if active_page == 'dashboard' %}active{% endif %}" href="{{ url_for('home') }}">Dashboard</a></li>
+                    <li><a class="nav-item {% if active_page == 'map' %}active{% endif %}" href="{{ url_for('network_map') }}">Network map</a></li>
+                    <li><a class="nav-item {% if active_page == 'threats' %}active{% endif %}" href="{{ url_for('threats_page') }}">Threats</a></li>
+                    <li><a class="nav-item {% if active_page == 'analytics' %}active{% endif %}" href="{{ url_for('analytics_page') }}">Analytics</a></li>
+                    <li><a class="nav-item {% if active_page == 'bot' %}active{% endif %}" href="{{ url_for('bot_page') }}">Sak bot</a></li>
+                    <li><a class="nav-item {% if active_page == 'settings' %}active{% endif %}" href="{{ url_for('settings_page') }}">Settings</a></li>
+                    <li><a class="nav-item {% if active_page == 'about' %}active{% endif %}" href="{{ url_for('about_page') }}">About</a></li>
+                </ul>
+            </nav>
+
+            <div class="status-box">
+                <strong>Running</strong>
+                Packet capture and analysis are connected.
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <button class="menu-button" id="menuButton" type="button" aria-label="Open menu">Menu</button>
+                    <h2>{{ page_title }}</h2>
+                    <p>{{ page_subtitle }}</p>
+                </div>
+                <div class="topbar-actions">
+                    <span class="clock" id="clock"></span>
+                    {% block topbar_actions %}{% endblock %}
+                </div>
+            </header>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script type="application/json" id="networkFacts">{{ {"packets": total_packets, "threats": threats, "risk": risk} | tojson }}</script>
+    <script src="{{ url_for('static', filename='sakro.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

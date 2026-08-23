@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% set page_title = "Threats" %}
+{% set page_subtitle = "Packets that looked unusual" %}
+
+{% block content %}
+    <section class="notice">
+        <h3>What “threat” means here</h3>
+        <p>Sakro marks a packet as unusual when it does not match the usual pattern in your traffic file. That is a hint, not proof of an attack. A software update or a new website can look unusual too.</p>
+    </section>
+
+    <section class="panel table-panel" style="margin-top: 0;">
+        <div class="panel-header">
+            <h3>Unusual packets</h3>
+            <span class="badge">{{ threats }} flagged</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Protocol</th>
+                        <th>Size</th>
+                        <th>Why it is listed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for packet in flagged %}
+                    <tr>
+                        <td>{{ packet.source }}</td>
+                        <td>{{ packet.destination }}</td>
+                        <td class="protocol">{{ packet.protocol }}</td>
+                        <td>{{ packet.length }}</td>
+                        <td>{{ packet.note }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="empty">Nothing unusual in the current traffic file.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
