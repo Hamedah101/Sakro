@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% set page_title = "Sak bot" %}
+{% set page_subtitle = "Ask a few questions about this network" %}
+
+{% block content %}
+    <section class="notice">
+        <h3>This is a simple helper</h3>
+        <p>Sak bot answers a short list of questions from the numbers on this computer. It is not a full chat AI.</p>
+    </section>
+
+    <section class="panel">
+        <div class="chat-panel">
+            <div class="suggest-row">
+                <button class="row-action" type="button" data-ask="How many packets?">How many packets?</button>
+                <button class="row-action" type="button" data-ask="Any threats?">Any threats?</button>
+                <button class="row-action" type="button" data-ask="What is the risk?">What is the risk?</button>
+                <button class="row-action" type="button" data-ask="How do I save to Backblaze?">Save to Backblaze?</button>
+            </div>
+            <div class="chat-log" id="chatLog">
+                <div class="chat-bubble bot">Hi. Ask me about packets, threats, risk, or saving a copy to Backblaze.</div>
+            </div>
+            <form class="chat-form" id="botForm">
+                <input id="botInput" type="text" placeholder="Type a question" autocomplete="off">
+                <button class="primary-button" type="submit">Ask</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}
