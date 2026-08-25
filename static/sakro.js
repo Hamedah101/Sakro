@@ -182,7 +182,7 @@ function setupStandalonePages() {
         if (subtitle) subtitle.textContent = titles[pageName][1];
         const scanButton = document.getElementById("scanButton");
         if (scanButton) {
-            scanButton.style.display = pageName === "dashboard" ? "" : "none";
+            scanButton.style.display = "" ;
         }
         if (pageName === "analytics") {
             setupCharts();
